@@ -1,7 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { APP_NAME } from '../../constants';
+// import { APP_NAME } from '../../constants';
 
 export function AuthLayout() {
   return (
