@@ -65,28 +65,6 @@ export async function uploadToCloudinary(
 }
 
 /**
- * Generate Cloudinary signature for signed uploads
- */
-function generateSignature(paramsToSign: Record<string, string | number>): string {
-  if (!CLOUDINARY_API_SECRET) {
-    throw new Error('CLOUDINARY_API_SECRET is required for signed uploads');
-  }
-
-  // Sort parameters alphabetically
-  const sortedParams = Object.keys(paramsToSign)
-    .sort()
-    .map(key => `${key}=${paramsToSign[key]}`)
-    .join('&');
-
-  // In production, this should be done server-side!
-  // For now, we'll use a simple hash (this is NOT secure for production)
-  const stringToSign = `${sortedParams}${CLOUDINARY_API_SECRET}`;
-  
-  // Use SubtleCrypto API for SHA-1 hash
-  return stringToSign; // Placeholder - will implement proper signing
-}
-
-/**
  * Upload an avatar image to Cloudinary using SIGNED uploads (no preset needed)
  * WARNING: This exposes API_SECRET in frontend code. 
  * In production, generate signatures server-side!
@@ -187,7 +165,7 @@ export async function uploadAvatar(file: File, userId: string): Promise<string> 
  * Delete an image from Cloudinary (requires backend implementation for security)
  * This is a placeholder - in production, this should be done server-side
  */
-export async function deleteFromCloudinary(publicId: string): Promise<void> {
+export async function deleteFromCloudinary(_publicId: string): Promise<void> {
   console.warn('Delete operation should be implemented server-side for security');
   // In production, call your backend API endpoint that handles deletion
   // using Cloudinary Admin API with API_SECRET
