@@ -3,15 +3,15 @@ import { getAuth, GoogleAuthProvider }    from 'firebase/auth';
 import { getFirestore }                   from 'firebase/firestore';
 import { getStorage }                     from 'firebase/storage';
 
-// ─── Config (injected at build time by Vite from .env) ────────────────────────
+// ─── Firebase Configuration (hardcoded) ───────────────────────────────────────
 const firebaseConfig = {
-  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY             as string,
-  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN         as string,
-  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID          as string,
-  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET      as string,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID as string,
-  appId:             import.meta.env.VITE_FIREBASE_APP_ID              as string,
-  measurementId:     import.meta.env.VITE_FIREBASE_MEASUREMENT_ID      as string,
+  apiKey:            'AIzaSyDJhIaibuRhFXKLXlRThYldlxJ5HqqpwuY',
+  authDomain:        'portfolio-63020.firebaseapp.com',
+  projectId:         'portfolio-63020',
+  storageBucket:     'portfolio-63020.firebasestorage.app',
+  messagingSenderId: '553096565468',
+  appId:             '1:553096565468:web:9e9c4c8fd32ea66d9c1a19',
+  measurementId:     'G-HXLNPD7GWW',
 };
 
 // Prevent duplicate app init during Vite HMR
