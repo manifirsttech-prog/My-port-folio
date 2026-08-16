@@ -47,6 +47,15 @@ export function EditProfilePage() {
     }
   }, [profile, reset]);
 
+  // Cleanup: revoke object URL on unmount to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (avatarPreview && avatarPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
+
   const addSkill = (skill: string) => {
     const s = skill.trim();
     if (s && !skills.includes(s)) {
@@ -61,6 +70,12 @@ export function EditProfilePage() {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    
+    // Revoke previous object URL to prevent memory leak
+    if (avatarPreview && avatarPreview.startsWith('blob:')) {
+      URL.revokeObjectURL(avatarPreview);
+    }
+    
     setPendingFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };

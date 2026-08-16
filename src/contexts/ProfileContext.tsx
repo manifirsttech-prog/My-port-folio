@@ -11,13 +11,9 @@ import {
   updateDoc,
   Timestamp,
 } from 'firebase/firestore';
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-} from 'firebase/storage';
 import { updateProfile as updateFirebaseAuthProfile } from 'firebase/auth';
-import { db, storage, auth } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
+import { uploadAvatar as uploadAvatarToCloudinary } from '../lib/cloudinary';
 import { useAuth } from './AuthContext';
 import type { UserProfile } from '../types';
 import type { ProfileSchema } from '../lib/validations';
@@ -119,20 +115,24 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
-  // ── upload avatar to Firebase Storage, returns download URL ─────────────────
+  // ── upload avatar to Cloudinary, then save URL to Firestore ─────────────────
   const uploadAvatar = useCallback(async (file: File): Promise<string> => {
     if (!user) throw new Error('Not authenticated');
-    const fileRef = storageRef(storage, `avatars/${user.uid}/${file.name}`);
-    await uploadBytes(fileRef, file);
-    const url = await getDownloadURL(fileRef);
-    // Persist URL to Firestore + Firebase Auth
+    
+    // 1. Upload to Cloudinary (optimized and resized)
+    const url = await uploadAvatarToCloudinary(file, user.uid);
+    
+    // 2. Save Cloudinary URL to Firestore
     await updateDoc(doc(db, 'users', user.uid), {
       avatarUrl: url,
       updatedAt: new Date().toISOString(),
     });
+    
+    // 3. Update Firebase Auth profile photo
     if (auth.currentUser) {
       await updateFirebaseAuthProfile(auth.currentUser, { photoURL: url });
     }
+    
     return url;
   }, [user]);
 
